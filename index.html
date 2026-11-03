@@ -1,160 +1,86 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a0a0a">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="apple-mobile-web-app-title" content="Punchlines">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>Banque à Punchlines</title>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4A2E1D">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Punchlines</title>
 <style>
-:root{--bg:#0a0a0a;--surf:#161616;--ink:#f4efe1;--mute:#a59d86;--line:#2e2b22;--gold:#d4af37;--green:#2e9e5b;--hl:#2a2410;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);color-scheme:dark}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:640px;margin:0 auto;padding:16px 16px calc(92px + env(safe-area-inset-bottom,0px))}
-h1{font:400 1.7rem/1.2 Georgia,"Times New Roman",serif;color:var(--gold);margin:10px 0 4px}
-p.sub{color:var(--mute);margin:0 0 16px;font-size:.93rem}
-label{display:block;font-weight:600;font-size:.9rem;margin:14px 0 4px}
-input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
-input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
-button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-textarea{min-height:190px;resize:vertical;line-height:1.5}
-.hero{display:flex;align-items:center;gap:12px;padding:4px 0 14px;margin-bottom:6px;border-bottom:1px solid var(--gold)}
-.hero svg{color:var(--gold);flex:none}
-.hero b{font:400 1.2rem/1.2 Georgia,"Times New Roman",serif;color:var(--gold);display:block}
-.hero small{color:var(--mute);font-size:.86rem}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
-.chip{flex:none;border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:20px;padding:8px 14px;font:inherit;font-size:.9rem;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--gold);color:#0a0a0a;border-color:var(--gold);font-weight:700}
-.list{display:grid;gap:8px}
-.item{text-align:left;width:100%;border:1px solid var(--line);border-left:3px solid var(--green);background:var(--surf);color:var(--ink);border-radius:8px;padding:12px;font:inherit;cursor:pointer}
-.item[aria-current="true"]{border-color:var(--gold);border-left-color:var(--gold)}
-.item small{display:block;color:var(--mute);margin-top:2px}
-.row{display:flex;gap:8px;margin-top:10px}
-.btn{flex:1;border:1px solid var(--gold);border-radius:8px;padding:14px;font:inherit;font-weight:700;cursor:pointer;background:var(--gold);color:#0a0a0a}
-.btn.alt{background:transparent;color:var(--gold)}
-.btn.wa{background:var(--green);border-color:var(--green);color:#fff}
-.btn:active{opacity:.8}
-.warn{background:var(--hl);border-left:3px solid var(--gold);border-radius:6px;padding:8px 12px;font-size:.9rem;margin:10px 0}
-.card{background:var(--surf);border:1px solid var(--line);border-top:2px solid var(--gold);border-radius:8px;padding:12px;margin-bottom:10px}
-.card pre{white-space:pre-wrap;font:inherit;margin:6px 0 10px}
-.day{display:flex;gap:12px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:8px}
-.day input{width:24px;height:24px;margin-top:2px;flex:none;accent-color:var(--green)}
-.day.done{opacity:.6}
-.day.done b{text-decoration:line-through}
-.day button{margin-top:6px;border:0;background:none;color:var(--gold);text-decoration:underline;font:inherit;padding:4px 0;cursor:pointer}
-.inst{background:var(--surf);border:1px solid var(--gold);border-radius:8px;padding:12px;margin:0 0 6px}
-.inst p{margin:6px 0;font-size:.92rem}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#0f0f0f;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
-nav button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-size:.78rem;line-height:1.3;padding:8px 2px;border-radius:8px;cursor:pointer}
-nav button svg{display:block;margin:0 auto 2px}
-nav button[aria-selected="true"]{color:var(--gold);box-shadow:inset 0 2px 0 var(--gold)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--green);color:#fff;padding:10px 16px;border-radius:20px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s}
-.toast.on{opacity:1}
-.empty{color:var(--mute);padding:20px 4px}
-.hbtn{margin-left:auto;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:20px;padding:8px 14px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer}
-.dlg{position:fixed;inset:0;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:20px;z-index:50}
-.dlg[hidden]{display:none}
-.dlg>div{background:var(--surf);border:1px solid var(--gold);border-radius:10px;padding:18px;max-width:420px}
-.dlg p{margin:0 0 14px}
-</style>
-</head>
-<body>
-<main id="app"></main>
-<nav id="nav" role="tablist"></nav>
-<div class="toast" id="toast" role="status"></div>
-<div class="dlg" id="dlg" hidden><div><p id="dlgt"></p><p id="dlgd" style="white-space:pre-line;color:var(--mute);font-size:.85rem"></p><button class="btn" id="dlgx">Compris</button></div></div>
+:root{--b:#4A2E1D;--g:#B8863B;--c:#FAF3E6;--t:#2B2B2B;--l:#E8D9B8}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 Georgia,serif;color:var(--t);background:#fff;padding-bottom:70px}
+header{background:var(--b);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:5}
+header b{color:var(--g);letter-spacing:.08em;font-size:12px;display:block}header h1{margin:0;font-size:18px}
+main{padding:14px}.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--b);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;font-size:12px;background:none;border:0;color:#d9c7a3;padding:14px 0;font:inherit;font-size:13px}.tabs .on{color:#fff;border-top:3px solid var(--g)}
+label{display:block;font-size:12px;color:#5a5a5a;margin:12px 0 3px}input,textarea{width:100%;border:1px solid var(--l);border-radius:8px;padding:10px;font:inherit;background:var(--c)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.chips button{white-space:nowrap;border:1px solid var(--g);background:#fff;color:var(--b);border-radius:18px;padding:6px 12px;font:inherit;font-size:13px}
+.chips .on{background:var(--b);color:#fff;border-color:var(--b)}
+.it{border:1px solid var(--l);border-left:4px solid var(--g);border-radius:8px;padding:11px;margin:9px 0;background:var(--c);white-space:pre-wrap}
+.it small{color:var(--g);display:block;font-weight:bold;margin-bottom:3px}
+#sh{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:9}#sh.o{display:flex}
+#sh div{background:#fff;width:100%;padding:14px;border-radius:16px 16px 0 0;max-height:92%;overflow:auto}
+#sh textarea{height:230px}.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn{flex:1;min-width:30%;border:0;border-radius:8px;padding:12px;font:inherit;font-weight:bold;background:var(--g);color:#fff}.btn.d{background:var(--b)}.btn.w{background:#fff;color:var(--b);border:1px solid var(--b)}
+.warn{color:#b3261e;font-size:13px;margin-top:6px}.hint{font-size:13px;color:#5a5a5a}
+</style></head><body>
+<header><b>SIKA SKILLS</b><h1 id="ti">Punchlines</h1></header>
+<main id="m"></main>
+<nav class="tabs"><button data-t="f">Ma fiche</button><button data-t="b">Banque</button><button data-t="p">Plan</button><button data-t="c">Vérifier</button><button data-t="s">Favoris</button></nav>
+<div id="sh"><div>
+<textarea id="ta"></textarea><div class="warn" id="wn"></div>
+<div class="row"><button class="btn d" id="cp">Copier</button><button class="btn" id="wa">WhatsApp</button><button class="btn w" id="sv">★ Garder</button></div>
+<div class="row"><button class="btn w" id="sr">Partager…</button><button class="btn w" id="cl">Fermer</button></div></div></div>
 <script>
-const FIELDS=[
-["produit","Nom du produit","Guide PDF « 20 messages WhatsApp »"],
-["prix","Prix en FCFA","Ex. 2 500 FCFA"],
-["public","Pour qui","Ex. petits commerçants"],
-["probleme","Le problème que le produit règle","Ex. des clients qui lisent mais ne répondent pas"],
-["bonus","Bonus","Ex. 5 modèles de statuts"],
-["temoignage","Témoignage (une phrase)","Ex. « J’ai repris mes clients en une semaine. »"],
-["places","Places restantes","Ex. 12"],
-["contact","Lien ou numéro WhatsApp","Ex. wa.me/229XXXXXXXX"]
-];
-const CATS=["Facebook","Instagram","Statut WhatsApp","TikTok","Objection prix"];
-const CCOL={"Facebook":"#2b6cff","Statut WhatsApp":"#14a35a","TikTok":"#ff3d7f","Objection prix":"#ff8a00"};
-let DP=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DP=e});
-const STANDALONE=!!((window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone);
-function installApp(){if(DP){DP.prompt();DP=null;return}
-const ios=/iphone|ipad|ipod/i.test(navigator.userAgent||"");
-const d=$("dlgd");d.textContent="Contrôle des fichiers…";
-Promise.all([["manifest.webmanifest","manifeste"],["icon-192.png","icône 192"],["icon-512.png","icône 512"],["sw.js","service worker"]].map(([u,n])=>fetch(u,{cache:"no-store"}).then(r=>n+" : "+(r.ok?"OK":"MANQUANT")).catch(()=>n+" : MANQUANT"))).then(a=>{d.textContent=a.join("\n")}).catch(()=>{d.textContent=""});
-$("dlgt").textContent=ios?"Sur iPhone, Apple ne permet pas de bouton qui installe directement. Ouvre cette page dans Safari, touche Partager (le carré avec une flèche), puis « Sur l’écran d’accueil », puis « Ajouter ».":"Touche les trois points en haut de Chrome, puis « Installer l’application », « Installer et créer un raccourci » ou « Ajouter à l’écran d’accueil ».";
-$("dlg").hidden=false}
-const T=[
-["Facebook","Question directe","[public], [probleme] ?\n\nJ’ai préparé [produit] pour ça.\nPrix : [prix].\nBonus offert : [bonus].\n\nÉcris-moi ici : [contact]"],
-["Facebook","Avant / après","Avant : [probleme].\nAprès : une méthode claire avec [produit].\n\nPour [public]. Prix : [prix].\nCommande : [contact]"],
-["Facebook","Témoignage","« [temoignage] »\n\nC’est ce que disent ceux qui utilisent [produit].\nPrix : [prix]. Bonus : [bonus].\n\nPour l’avoir : [contact]"],
-["Facebook","Places limitées","Il reste [places] places pour [produit].\n\nPour [public] qui en ont assez de [probleme].\nPrix : [prix] avec [bonus] en plus.\n\nRéserve ici : [contact]"],
-["Statut WhatsApp","Statut court","[probleme] ?\n[produit], [prix].\nÉcris-moi : [contact]"],
-["Statut WhatsApp","Témoignage en statut","« [temoignage] »\n\n[produit] — [prix]\nBonus : [bonus]\n[contact]"],
-["Statut WhatsApp","Rappel du soir","Dernier rappel de la journée : [produit].\nIl reste [places] places.\nRéponds « OUI » pour recevoir les détails."],
-["TikTok","Accroche vidéo","Si tu es [public] et que tu vis [probleme], regarde jusqu’à la fin.\n\nJe te montre comment [produit] règle ça.\nLien en bio : [contact]"],
-["TikTok","Voix off courte","Tu fais [probleme] ? Voilà ce que je fais à la place.\nC’est dans [produit], [prix].\nBonus : [bonus]. Contact : [contact]"],
-["TikTok","Réponse à un commentaire","Tu m’as demandé comment régler [probleme].\nJe l’ai mis dans [produit].\nTout est expliqué, pour [prix]. [contact]"],
-["Objection prix","Comparer au quotidien","[prix], c’est le prix d’un repas.\nAvec [produit], tu règles [probleme].\nBonus : [bonus]. Commande : [contact]"],
-["Objection prix","Coût de ne rien faire","Chaque jour avec [probleme], tu perds des occasions.\n[produit] coûte [prix] une seule fois.\nPour [public]. [contact]"],
-["Objection prix","Réponse en message privé","Je comprends que [prix] fasse réfléchir.\nVoici ce que tu reçois : [produit] et [bonus].\n« [temoignage] »\nSi ça te convient : [contact]"],
-["Instagram","Légende simple","[probleme] ?\n\n[produit] est fait pour [public].\nPrix : [prix]. Bonus : [bonus].\n\nÉcris-moi en message privé : [contact]"],
-["Instagram","Légende témoignage","« [temoignage] »\n\nVoilà ce que [produit] apporte à [public].\nBonus : [bonus]. Prix : [prix].\n\nCommande : [contact]"],
-["Instagram","Texte de story","[produit]\n[prix] · Bonus : [bonus]\nIl reste [places] places.\nÉcris-moi : [contact]"]
-];
-const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let FL=store.get("bp_fiches",null);if(!FL||!FL.length)FL=[store.get("bp_fiche",{})];
-let S={tab:"fiche",cat:CATS[0],sel:-1,text:"",fiches:FL,cur:0,fiche:FL[0],favs:store.get("bp_favs",[]),plan:store.get("bp_plan",{})};
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function fill(t){return t.replace(/\[(\w+)\]/g,(m,k)=>(S.fiche[k]&&S.fiche[k].trim())?S.fiche[k].trim():m)}
-function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1600)}
-async function copy(txt){try{await navigator.clipboard.writeText(txt)}catch(e){const a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(_){}a.remove()}toast("Texte copié")}
-const TABS=[["fiche", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M7 3h7l4 4v14H7z'/><path d='M14 3v4h4M10 12h5M10 16h5'/></svg>Ma fiche"], ["textes", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l4-1 11-11-3-3L5 16z'/><path d='M14 6l3 3'/></svg>Textes"], ["favoris", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z'/></svg>Favoris"], ["plan", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='5' width='16' height='15' rx='2'/><path d='M4 10h16M8 3v4M16 3v4'/></svg>7 jours"]];
-function go(t){S.tab=t;if(location.hash!=="#"+t)location.hash=t;render();window.scrollTo(0,0)}
-function nav(){$("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" aria-selected="${S.tab===k}" data-t="${k}">${l}</button>`).join("");$("nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.t)}}
-function PSEL(add){return `<div class="chips">${S.fiches.map((f,i)=>`<button class="chip" aria-pressed="${i===S.cur}" data-p="${i}">${esc((f.produit||"").slice(0,24)||"Produit "+(i+1))}</button>`).join("")}${add?`<button class="chip" data-np="1">+ Nouveau produit</button>`:""}</div>`}
-function vFiche(){return `<h1>Ma fiche produit</h1><p class="sub">Remplis-la une seule fois. Elle complète tous les textes automatiquement.</p>`+PSEL(true)+FIELDS.map(([k,l,p])=>`<label for="f_${k}">${l}</label><input id="f_${k}" data-k="${k}" placeholder="${esc(p)}" value="${esc(S.fiche[k]||"")}" autocomplete="off">`).join("")+`<div class="row"><button class="btn" id="goT">Choisir un texte</button></div>`+(S.fiches.length>1?`<div class="row"><button class="btn alt" data-dp="1">Supprimer ce produit</button></div>`:"")}
-function vTextes(){
-const L=T.map((t,i)=>[t,i]).filter(([t])=>t[0]===S.cat);
-const miss=[...new Set((S.text.match(/\[\w+\]/g)||[]))];
-return `<h1>Textes</h1><p class="sub">Choisis un modèle, modifie-le, copie-le.</p>${S.fiches.length>1?PSEL(false):""}
-<div class="chips">${CATS.map(c=>`<button class="chip" aria-pressed="${S.cat===c}" data-c="${c}">${c}</button>`).join("")}</div>
-<div class="list" style="--cc:${CCOL[S.cat]}">${L.map(([t,i])=>`<button class="item" data-i="${i}" aria-current="${S.sel===i}"><b>${t[1]}</b><small>${esc(fill(t[2]).split("\n")[0])}</small></button>`).join("")}</div>
-${S.sel>=0?`<label for="txt">Ton texte</label><textarea id="txt">${esc(S.text)}</textarea>
-${miss.length?`<div class="warn">À compléter dans ta fiche : ${miss.join(", ")}</div>`:""}
-<div class="row"><button class="btn" id="cp">Copier</button><button class="btn wa" id="wa">WhatsApp</button></div><div class="row"><button class="btn alt" id="sh">Partager</button><button class="btn alt" id="fv">Garder en favori</button></div><p class="sub" style="margin-top:12px">Instagram : touche Copier, puis colle le texte dans ta légende ou ta story.</p>`:""}`}
-function vFavs(){return `<h1>Favoris</h1><p class="sub">Tes textes gardés, prêts à copier.</p>`+(S.favs.length?S.favs.map((f,i)=>`<div class="card"><b>${esc(f.cat)}</b><pre>${esc(f.text)}</pre><div class="row"><button class="btn" data-cp="${i}">Copier</button><button class="btn alt" data-sf="${i}">Partager</button><button class="btn alt" data-del="${i}">Supprimer</button></div></div>`).join(""):`<div class="empty">Aucun favori. Dans Textes, touche « Garder en favori ».</div>`)}
-const PLAN=[["Annonce Facebook","Facebook"],["Statut WhatsApp","Statut WhatsApp"],["Vidéo TikTok","TikTok"],["Témoignage","Facebook"],["Réponse à l’objection du prix","Objection prix"],["Relance de tes contacts WhatsApp","Statut WhatsApp"],["Compter les réponses et garder la meilleure accroche",null]];
-function vPlan(){const n=Object.values(S.plan).filter(Boolean).length;return `<h1>Plan sur 7 jours</h1><p class="sub">${n} jour${n>1?"s":""} sur 7 fait${n>1?"s":""}.</p>`+PLAN.map(([l,c],i)=>`<div class="day ${S.plan[i]?"done":""}"><input type="checkbox" id="d${i}" data-d="${i}" ${S.plan[i]?"checked":""}><div><label for="d${i}" style="margin:0"><b>Jour ${i+1} : ${l}</b></label>${c?`<button data-w="${c}">Écrire ce texte</button>`:""}</div></div>`).join("")+`<div class="row"><button class="btn alt" id="rz">Remettre le plan à zéro</button></div>`}
-function render(){nav();$("app").innerHTML=`<header class="hero"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-linecap="round" stroke-width="2.6"/></svg><div><b>Banque à Punchlines</b><small>Tes pubs prêtes en quelques secondes</small></div>${STANDALONE?"":`<button class="hbtn" id="inst2">Installer</button>`}</header>`+{fiche:vFiche,textes:vTextes,favoris:vFavs,plan:vPlan}[S.tab]()}
-document.addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.k;if(k){S.fiche[k]=e.target.value;store.set("bp_fiches",S.fiches)}if(e.target.id==="txt")S.text=e.target.value});
-document.addEventListener("change",e=>{if(e.target.dataset&&e.target.dataset.d!==undefined){S.plan[e.target.dataset.d]=e.target.checked;store.set("bp_plan",S.plan);render()}});
-document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
-if(d.p!==undefined){S.cur=+d.p;S.fiche=S.fiches[S.cur];if(S.sel>=0)S.text=fill(T[S.sel][2]);render()}
-else if(d.np){S.fiches.push({});S.cur=S.fiches.length-1;S.fiche=S.fiches[S.cur];store.set("bp_fiches",S.fiches);render()}
-else if(d.dp){if(confirm("Supprimer ce produit ?")){S.fiches.splice(S.cur,1);S.cur=0;S.fiche=S.fiches[0];store.set("bp_fiches",S.fiches);render()}}
-else if(b.id==="wa")window.open("https://wa.me/?text="+encodeURIComponent(S.text),"_blank");
-else if(b.id==="sh"){if(navigator.share)navigator.share({text:S.text}).catch(()=>{});else copy(S.text)}
-else if(d.sf!==undefined){const t=S.favs[+d.sf].text;if(navigator.share)navigator.share({text:t}).catch(()=>{});else copy(t)}
-else if(b.id==="inst"||b.id==="inst2")installApp();
-else if(b.id==="dlgx")$("dlg").hidden=true;
-else if(b.id==="goT")go("textes");
-else if(d.c){S.cat=d.c;S.sel=-1;S.text="";render()}
-else if(d.i!==undefined){S.sel=+d.i;S.text=fill(T[S.sel][2]);render()}
-else if(b.id==="cp")copy(S.text);
-else if(b.id==="fv"){S.favs.unshift({cat:T[S.sel][0],text:S.text});store.set("bp_favs",S.favs);toast("Gardé dans les favoris")}
-else if(d.cp!==undefined)copy(S.favs[+d.cp].text);
-else if(d.del!==undefined){S.favs.splice(+d.del,1);store.set("bp_favs",S.favs);render()}
-else if(d.w){S.cat=d.w;S.sel=-1;S.text="";go("textes")}
-else if(b.id==="rz"){S.plan={};store.set("bp_plan",S.plan);render()}});
-window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h)&&h!==S.tab){S.tab=h;render()}});
-{const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h))S.tab=h}
-render();
-if("serviceWorker" in navigator){const had=navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!window.__rl){window.__rl=1;location.reload()}});window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
-</script>
-</body>
-</html>
+const FL=[['nom','Nom du produit','Baskets Urban Pro'],['pb','Problème du client','Des baskets qui font mal aux pieds'],['comp','Compétence / ce que je sais faire','vendre des baskets confortables'],['res','Résultat promis','marcher sans mal toute la journée'],['diff','Ce qui me rend différent(e)','semelle souple'],['app','Ce que le produit apporte','confort et solidité'],['dur','Durée / délai','livraison en 48 h'],['prix','Prix (avec FCFA)','15 000 FCFA'],['date','Date limite','dimanche soir'],['nb','Nombre de places','20'],['bonus','Bonus offert','une paire de chaussettes'],['bonus2','Bonus supplémentaire',''],['pre','Prénom du témoin','Awa'],['ville','Ville du témoin','Cotonou'],['cit','Témoignage réel (citation)','']];
+const MAP={'nom du produit':'nom','problème':'pb','problème du client':'pb','compétence':'comp','ta compétence':'comp','résultat':'res','ta différence':'diff','ce que le produit apporte':'app','durée':'dur','prix':'prix','date':'date','nombre':'nb','bonus':'bonus','bonus supplémentaire':'bonus2','prénom':'pre','ville':'ville'};
+const D={
+Problème:["Tu as un talent que personne ne connaît encore ?","Tu en as marre de [problème] sans savoir comment t’en sortir ?","Et si le vrai frein n’était pas ton talent, mais le fait de ne pas savoir le vendre ?","Tu perds du temps et de l’argent à essayer seul(e) ?","Combien de fois as-tu remis ton projet à demain par peur de te tromper ?","[Problème du client] te bloque depuis trop longtemps.","Tu sais faire [compétence], mais tu ne sais pas comment en vivre ?","Ce n’est pas le manque de talent qui te freine, c’est le manque de méthode.","Tu regardes les autres réussir et tu te demandes : pourquoi pas moi ?","Stop à l’improvisation : voici la méthode qui change tout."],
+Résultat:["Transforme ton savoir en revenus dès ce mois-ci.","Et si tu recevais ton premier virement dans les prochains jours ?","Apprends à vendre [compétence] sans expérience, sans grosse audience.","La méthode simple pour transformer ce que tu sais déjà en argent.","Lance ton activité en ligne, même en partant de zéro.","De débutant(e) à premier client payant, étape par étape.","Ce que tu sais faire aujourd’hui peut te rapporter dès demain.","Construis un revenu à partir de tes connaissances, sans matériel compliqué.","La liberté financière commence par une seule décision.","Deviens indépendant(e) grâce à ce que tu sais déjà faire."],
+Urgence:["Offre de lancement valable jusqu’au [date] seulement.","Places limitées : plus que [nombre] disponibles.","Ce tarif ne sera plus proposé après le [date].","Les [nombre] premiers inscrits reçoivent [bonus] en plus.","Dernières heures pour profiter du prix de lancement.","Une fois ce nombre de places atteint, l’offre disparaît.","Ne remets pas à demain ce qui peut changer ta situation aujourd’hui.","Cette opportunité ne se représentera pas à ce prix.","Rejoins-nous avant que les places soient toutes prises.","Le compte à rebours a commencé."],
+Preuve:["Rejoins les [nombre] personnes qui ont déjà commencé.","Elles étaient dans la même situation que toi il y a quelques semaines.","« [Citation] » — [Prénom], [ville]","De plus en plus de personnes transforment leur savoir en revenus. À ton tour.","Découvre pourquoi tant de personnes recommandent cette méthode.","[Nombre] guides déjà téléchargés cette semaine.","Elles ont commencé sans expérience. Aujourd’hui, elles ont leurs premiers clients.","Une méthode déjà testée et approuvée par [nombre] débutant(e)s.","Ce n’est pas de la théorie : voici ce que d’autres ont obtenu.","Ne nous crois pas sur parole : écoute la leur."],
+Objections:["« Je n’ai pas le temps » ? [Nom du produit] se lit en [durée], sans y passer des heures.","« C’est trop cher » ? Ça coûte [prix], soit moins que ce que tu perds en tâtonnant.","« Je n’ai pas d’expérience » ? Justement : c’est fait pour les débutant(e)s.","« Je n’ai pas d’audience » ? Tu n’as pas besoin de milliers d’abonnés pour faire ta première vente.","« Je ne suis pas assez doué(e) » ? Il suffit d’avoir un pas d’avance sur la personne que tu aides.","« Ça ne marchera pas pour moi » ? C’est ce que beaucoup pensent avant de commencer. Voici ce qui change avec une méthode.","« J’ai déjà essayé, sans résultat » ? Il te manquait peut-être [ce que le produit apporte].","« Je ne sais pas par où commencer » ? Voici l’ordre exact, étape par étape.","« Il y a déjà trop de monde sur ce sujet » ? Personne ne l’explique comme toi : [ta différence].","« Je vais y réfléchir » ? Réfléchis, oui. Mais ne laisse pas passer [date] ou [bonus]."],
+Textes:[
+["Tu as un talent que personne ne connaît encore ?","Beaucoup de personnes savent faire quelque chose d’utile, mais ne savent pas comment le transformer en revenu. [Nom du produit] t’accompagne pas à pas, même sans expérience ni grosse audience.","Découvre comment démarrer →"],
+["Et si tu recevais ton premier virement dans les prochains jours ?","[Nom du produit] t’apprend, étape par étape, à vendre tes connaissances en ligne et à générer tes premiers revenus, simplement, depuis chez toi.","Commence maintenant →"],
+["Offre de lancement valable jusqu’au [date] seulement.","Profite du tarif de lancement de [Nom du produit] avant qu’il ne remonte définitivement. Les [nombre] premiers inscrits reçoivent en plus [bonus].","Je réserve ma place →"],
+["Rejoins les [nombre] personnes qui ont déjà commencé.","Elles étaient exactement dans ta situation il y a quelques semaines. Aujourd’hui, elles avancent grâce à [Nom du produit]. « [Citation] » — [Prénom].","Rejoins-les maintenant →"],
+["Ce n’est pas ton talent qui manque, c’est la méthode.","Tu sais faire [compétence], mais tu ne sais pas par où commencer pour en vivre ? [Nom du produit] t’explique exactement quoi faire, dans l’ordre, sans jargon.","Découvre la méthode →"],
+["La liberté financière commence par une seule décision.","Avec [Nom du produit], apprends à transformer ce que tu sais déjà faire en revenu réel, à ton rythme, depuis chez toi.","Je me lance →"],
+["Les [nombre] premiers inscrits reçoivent [bonus] offert.","[Nom du produit] inclut déjà des bonus pour t’aider à démarrer. Pour le lancement, les premiers inscrits reçoivent en plus [bonus supplémentaire] — pendant quelques jours seulement.","J’en profite maintenant →"],
+["« [Citation] »","C’est le retour de [Prénom], qui a suivi [Nom du produit]. Comme lui/elle, tu peux avancer étape par étape.","Lis son témoignage complet →"],
+["« C’est trop cher » ? Regarde ce que ça t’évite.","[Nom du produit] te fait gagner des semaines d’essais-erreurs et de doutes. Le prix d’un bon départ est toujours plus rentable que celui de repartir de zéro.","Découvre le contenu complet →"],
+["Tu hésites encore ?","Tu peux continuer à attendre le bon moment, ou décider aujourd’hui de commencer. [Nom du produit] t’accompagne dès la première étape.","Je commence aujourd’hui →"],
+["« Je n’ai pas le temps » ? Il te suffit de [durée].","[Nom du produit] s’adapte à ton emploi du temps : [durée] suffisent pour [résultat].","Je commence à mon rythme →"],
+["« Je n’ai pas d’expérience » ? Parfait, c’est pour toi.","[Nom du produit] est pensé pour les débutant(e)s : tu avances étape par étape, sans jargon, avec des exemples concrets.","Je démarre →"],
+["« Je n’ai pas d’audience » ? Ta première vente peut venir de tes contacts.","Pas besoin de milliers d’abonnés. Tes contacts WhatsApp, tes groupes Facebook et quelques publications bien écrites peuvent suffire pour [Nom du produit].","Je passe à l’action →"],
+["« Ça ne marchera pas pour moi » ? Voyons pourquoi tu le penses.","Beaucoup pensent la même chose avant de commencer. [Nom du produit] te donne une méthode claire. « [Citation] » — [Prénom].","Découvre la méthode →"],
+["« J’ai déjà essayé, sans résultat » ? Le problème n’était peut-être pas toi.","Sans méthode, même un bon projet avance au hasard. [Nom du produit] t’apporte [ce que le produit apporte].","Je réessaie avec une méthode →"],
+["« Je vais y réfléchir » ? Bonne idée, mais pas trop longtemps.","L’offre de [Nom du produit] se termine le [date]. Prends le temps de décider : passé cette date, le prix de lancement ne sera plus disponible.","Je regarde le contenu →"]].map(a=>a.join('\n\n')),
+Courts:["Tu sais faire quelque chose d’utile.\nIl te manque juste la méthode pour en vivre.\n[Nom du produit] — dispo maintenant.\n→ Écris-moi en message privé","Ton premier virement peut arriver plus vite que tu ne le penses.\n→ Découvre comment, écris-moi.","« Je n’ai pas le temps » ? [durée] suffisent.\n→ Réponds à ce statut.","Plus que [nombre] places à [prix].\n[bonus] offert aux premiers.\n→ Réponds à ce statut pour réserver la tienne."]};
+const $=s=>document.querySelector(s),ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const PL=[['Faire reconnaître le problème','Problème','Statut WhatsApp (accroche courte) + 1 post Facebook'],['Montrer le résultat possible','Résultat','Post Facebook (texte complet) + statut WhatsApp'],['Annoncer le produit et son prix','Textes','Annonce Facebook, statuts WhatsApp, vidéo TikTok'],['Rassurer','Preuve','Témoignage réel ou photo de client, en statut et en post'],['Lever les doutes','Objections','Une objection par publication (temps, prix, expérience)'],['Créer l’urgence','Urgence','Rappel de la date limite et des places restantes, matin et soir'],['Conclure','Urgence','« Dernières heures » + relance en message privé de ceux qui ont hésité']];
+const CK=['Mon accroche parle d’un blocage ou d’un résultat, pas de moi.','Il ne reste aucun [crochet] dans mon texte.','Mes prix, dates et nombres de places sont vrais, en FCFA.','Mon témoignage est réel, et la personne est d’accord.','Il y a un seul appel à l’action, clair.','Le client sait comment commander (WhatsApp, message privé).','Je me suis relu(e) à voix haute.','Le format convient à la plateforme (court pour statut et TikTok, complet pour Facebook).'];
+let tab='f',cat='Problème',V=ls('fiche',{}),FV=ls('favs',[]),PS=ls('plan',{}),CS=ls('ck',{});
+const fill=t=>t.replace(/\[([^\]]+)\]/g,(m,k)=>{k=k.toLowerCase().replace(/…$/,'');const id=/^citation/.test(k)?'cit':MAP[k];return id&&V[id]?V[id]:m});
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));const m=$('#m');
+if(tab=='f'){$('#ti').textContent='Ma fiche produit';m.innerHTML='<p class="hint">Remplis-la une fois : les [crochets] de tous les textes se complètent tout seuls. Enregistré automatiquement sur ce téléphone.</p>'+FL.map(f=>`<label>${f[1]}</label><input data-k="${f[0]}" placeholder="ex. ${f[2]}" value="${esc(V[f[0]]||'')}">`).join('');
+m.querySelectorAll('input').forEach(i=>i.oninput=()=>{V[i.dataset.k]=i.value;sv('fiche',V)})}
+else if(tab=='b'){$('#ti').textContent='Banque à punchlines';m.innerHTML='<div class="chips">'+Object.keys(D).map(c=>`<button class="${c==cat?'on':''}" data-c="${c}">${c}</button>`).join('')+'</div>'+D[cat].map((t,i)=>`<div class="it" data-i="${i}"><small>${cat} ${i+1}</small>${esc(fill(t))}</div>`).join('');
+m.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{cat=b.dataset.c;render();scrollTo(0,0)});m.querySelectorAll('.it').forEach(e=>e.onclick=()=>open(fill(D[cat][+e.dataset.i])))}
+else if(tab=='p'){$('#ti').textContent='Plan sur 7 jours';m.innerHTML='<p class="hint">Un jour, un objectif, une catégorie. Prépare tes textes la veille.</p>'+PL.map((p,i)=>`<div class="it"><label style="display:flex;gap:10px;margin:0;color:inherit;font-size:15px"><input type="checkbox" data-j="${i}" ${PS[i]?'checked':''} style="width:20px;padding:0"><b>Jour ${i+1} — ${p[0]}</b></label><div class="hint" style="margin:4px 0 8px 30px">${p[2]}</div><button class="btn w" data-g="${p[1]}" style="margin-left:30px;padding:8px;flex:none">Voir : ${p[1]} →</button></div>`).join('');
+m.querySelectorAll('input').forEach(c=>c.onchange=()=>{PS[c.dataset.j]=c.checked;sv('plan',PS)});m.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{cat=b.dataset.g;tab='b';render();scrollTo(0,0)})}
+else if(tab=='c'){$('#ti').textContent='Avant de publier';m.innerHTML='<p class="hint">Coche chaque ligne avant d’appuyer sur « publier ».</p>'+CK.map((t,i)=>`<div class="it"><label style="display:flex;gap:10px;margin:0;color:inherit;font-size:15px"><input type="checkbox" data-k="${i}" ${CS[i]?'checked':''} style="width:20px;padding:0"><span>${t}</span></label></div>`).join('')+'<div class="row"><button class="btn d" id="rz">Tout décocher</button></div><p class="hint"><b>Test A/B :</b> publie deux accroches différentes sur deux jours, compte les réponses reçues, garde celle qui fait le plus réagir.</p>';
+m.querySelectorAll('input').forEach(c=>c.onchange=()=>{CS[c.dataset.k]=c.checked;sv('ck',CS)});$('#rz').onclick=()=>{CS={};sv('ck',CS);render()}}
+else{$('#ti').textContent='Mes favoris';m.innerHTML=FV.length?FV.map((t,i)=>`<div class="it" data-i="${i}">${esc(t)}</div>`).join(''):'<p class="hint">Rien ici pour l’instant. Ouvre un texte dans la Banque, modifie-le, puis touche « ★ Garder ».</p>';
+m.querySelectorAll('.it').forEach(e=>e.onclick=()=>open(FV[+e.dataset.i],+e.dataset.i))}}
+let cur=-1;function chk(){const n=($('#ta').value.match(/\[[^\]]+\]/g)||[]).length;$('#wn').textContent=n?`Il reste ${n} crochet(s) à remplacer avant de publier.`:''}
+function open(t,i=-1){cur=i;$('#ta').value=t;chk();$('#sh').classList.add('o')}
+$('#ta').oninput=chk;$('#cl').onclick=()=>$('#sh').classList.remove('o');
+$('#cp').onclick=async()=>{try{await navigator.clipboard.writeText($('#ta').value)}catch(e){$('#ta').select();document.execCommand('copy')}$('#cp').textContent='Copié ✓';setTimeout(()=>$('#cp').textContent='Copier',1500)};
+$('#wa').onclick=()=>location.href='https://wa.me/?text='+encodeURIComponent($('#ta').value);
+$('#sr').onclick=()=>navigator.share?navigator.share({text:$('#ta').value}).catch(()=>{}):$('#cp').click();
+$('#sv').onclick=()=>{const t=$('#ta').value;if(cur>=0)FV[cur]=t;else FV.unshift(t);sv('favs',FV);$('#sv').textContent='Gardé ✓';setTimeout(()=>$('#sv').textContent='★ Garder',1500)};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();scrollTo(0,0)});
+render();if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
