@@ -54,12 +54,18 @@ nav button[aria-selected="true"]{color:var(--gold);box-shadow:inset 0 2px 0 var(
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--green);color:#fff;padding:10px 16px;border-radius:20px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.on{opacity:1}
 .empty{color:var(--mute);padding:20px 4px}
+.hbtn{margin-left:auto;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:20px;padding:8px 14px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer}
+.dlg{position:fixed;inset:0;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:20px;z-index:50}
+.dlg[hidden]{display:none}
+.dlg>div{background:var(--surf);border:1px solid var(--gold);border-radius:10px;padding:18px;max-width:420px}
+.dlg p{margin:0 0 14px}
 </style>
 </head>
 <body>
 <main id="app"></main>
 <nav id="nav" role="tablist"></nav>
 <div class="toast" id="toast" role="status"></div>
+<div class="dlg" id="dlg" hidden><div><p id="dlgt"></p><button class="btn" id="dlgx">Compris</button></div></div>
 <script>
 const FIELDS=[
 ["produit","Nom du produit","Guide PDF « 20 messages WhatsApp »"],
@@ -73,7 +79,12 @@ const FIELDS=[
 ];
 const CATS=["Facebook","Instagram","Statut WhatsApp","TikTok","Objection prix"];
 const CCOL={"Facebook":"#2b6cff","Statut WhatsApp":"#14a35a","TikTok":"#ff3d7f","Objection prix":"#ff8a00"};
-let DP=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DP=e;if(S.tab==="fiche")render()});
+let DP=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DP=e});
+const STANDALONE=!!((window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone);
+function installApp(){if(DP){DP.prompt();DP=null;return}
+const ios=/iphone|ipad|ipod/i.test(navigator.userAgent||"");
+$("dlgt").textContent=ios?"Sur iPhone, Apple ne permet pas de bouton qui installe directement. Ouvre cette page dans Safari, touche Partager (le carré avec une flèche), puis « Sur l’écran d’accueil », puis « Ajouter ».":"Touche les trois points en haut de Chrome, puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».";
+$("dlg").hidden=false}
 const T=[
 ["Facebook","Question directe","[public], [probleme] ?\n\nJ’ai préparé [produit] pour ça.\nPrix : [prix].\nBonus offert : [bonus].\n\nÉcris-moi ici : [contact]"],
 ["Facebook","Avant / après","Avant : [probleme].\nAprès : une méthode claire avec [produit].\n\nPour [public]. Prix : [prix].\nCommande : [contact]"],
@@ -104,7 +115,7 @@ const TABS=[["fiche", "<svg width='22' height='22' viewBox='0 0 24 24' fill='non
 function go(t){S.tab=t;if(location.hash!=="#"+t)location.hash=t;render();window.scrollTo(0,0)}
 function nav(){$("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" aria-selected="${S.tab===k}" data-t="${k}">${l}</button>`).join("");$("nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.t)}}
 function PSEL(add){return `<div class="chips">${S.fiches.map((f,i)=>`<button class="chip" aria-pressed="${i===S.cur}" data-p="${i}">${esc((f.produit||"").slice(0,24)||"Produit "+(i+1))}</button>`).join("")}${add?`<button class="chip" data-np="1">+ Nouveau produit</button>`:""}</div>`}
-function vFiche(){return `<h1>Ma fiche produit</h1><p class="sub">Remplis-la une seule fois. Elle complète tous les textes automatiquement.</p><div class="inst"><b>Installer sur mon téléphone</b>${DP?`<div class="row"><button class="btn" id="inst">Installer l’appli</button></div>`:""}<p><b>iPhone (Safari)</b> : touche Partager, puis « Sur l’écran d’accueil ».</p><p><b>Android (Chrome)</b> : touche les trois points, puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».</p></div>`+PSEL(true)+FIELDS.map(([k,l,p])=>`<label for="f_${k}">${l}</label><input id="f_${k}" data-k="${k}" placeholder="${esc(p)}" value="${esc(S.fiche[k]||"")}" autocomplete="off">`).join("")+`<div class="row"><button class="btn" id="goT">Choisir un texte</button></div>`+(S.fiches.length>1?`<div class="row"><button class="btn alt" data-dp="1">Supprimer ce produit</button></div>`:"")}
+function vFiche(){return `<h1>Ma fiche produit</h1><p class="sub">Remplis-la une seule fois. Elle complète tous les textes automatiquement.</p>${STANDALONE?"":`<div class="inst"><b>Installer sur mon téléphone</b><p>Un seul appui, et l’appli s’ajoute à ton écran d’accueil.</p><div class="row"><button class="btn" id="inst">Installer l’appli</button></div></div>`}`+PSEL(true)+FIELDS.map(([k,l,p])=>`<label for="f_${k}">${l}</label><input id="f_${k}" data-k="${k}" placeholder="${esc(p)}" value="${esc(S.fiche[k]||"")}" autocomplete="off">`).join("")+`<div class="row"><button class="btn" id="goT">Choisir un texte</button></div>`+(S.fiches.length>1?`<div class="row"><button class="btn alt" data-dp="1">Supprimer ce produit</button></div>`:"")}
 function vTextes(){
 const L=T.map((t,i)=>[t,i]).filter(([t])=>t[0]===S.cat);
 const miss=[...new Set((S.text.match(/\[\w+\]/g)||[]))];
@@ -117,7 +128,7 @@ ${miss.length?`<div class="warn">À compléter dans ta fiche : ${miss.join(", ")
 function vFavs(){return `<h1>Favoris</h1><p class="sub">Tes textes gardés, prêts à copier.</p>`+(S.favs.length?S.favs.map((f,i)=>`<div class="card"><b>${esc(f.cat)}</b><pre>${esc(f.text)}</pre><div class="row"><button class="btn" data-cp="${i}">Copier</button><button class="btn alt" data-sf="${i}">Partager</button><button class="btn alt" data-del="${i}">Supprimer</button></div></div>`).join(""):`<div class="empty">Aucun favori. Dans Textes, touche « Garder en favori ».</div>`)}
 const PLAN=[["Annonce Facebook","Facebook"],["Statut WhatsApp","Statut WhatsApp"],["Vidéo TikTok","TikTok"],["Témoignage","Facebook"],["Réponse à l’objection du prix","Objection prix"],["Relance de tes contacts WhatsApp","Statut WhatsApp"],["Compter les réponses et garder la meilleure accroche",null]];
 function vPlan(){const n=Object.values(S.plan).filter(Boolean).length;return `<h1>Plan sur 7 jours</h1><p class="sub">${n} jour${n>1?"s":""} sur 7 fait${n>1?"s":""}.</p>`+PLAN.map(([l,c],i)=>`<div class="day ${S.plan[i]?"done":""}"><input type="checkbox" id="d${i}" data-d="${i}" ${S.plan[i]?"checked":""}><div><label for="d${i}" style="margin:0"><b>Jour ${i+1} : ${l}</b></label>${c?`<button data-w="${c}">Écrire ce texte</button>`:""}</div></div>`).join("")+`<div class="row"><button class="btn alt" id="rz">Remettre le plan à zéro</button></div>`}
-function render(){nav();$("app").innerHTML=`<header class="hero"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-linecap="round" stroke-width="2.6"/></svg><div><b>Banque à Punchlines</b><small>Tes pubs prêtes en quelques secondes</small></div></header>`+{fiche:vFiche,textes:vTextes,favoris:vFavs,plan:vPlan}[S.tab]()}
+function render(){nav();$("app").innerHTML=`<header class="hero"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-linecap="round" stroke-width="2.6"/></svg><div><b>Banque à Punchlines</b><small>Tes pubs prêtes en quelques secondes</small></div>${STANDALONE?"":`<button class="hbtn" id="inst2">Installer</button>`}</header>`+{fiche:vFiche,textes:vTextes,favoris:vFavs,plan:vPlan}[S.tab]()}
 document.addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.k;if(k){S.fiche[k]=e.target.value;store.set("bp_fiches",S.fiches)}if(e.target.id==="txt")S.text=e.target.value});
 document.addEventListener("change",e=>{if(e.target.dataset&&e.target.dataset.d!==undefined){S.plan[e.target.dataset.d]=e.target.checked;store.set("bp_plan",S.plan);render()}});
 document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
@@ -127,7 +138,8 @@ else if(d.dp){if(confirm("Supprimer ce produit ?")){S.fiches.splice(S.cur,1);S.c
 else if(b.id==="wa")window.open("https://wa.me/?text="+encodeURIComponent(S.text),"_blank");
 else if(b.id==="sh"){if(navigator.share)navigator.share({text:S.text}).catch(()=>{});else copy(S.text)}
 else if(d.sf!==undefined){const t=S.favs[+d.sf].text;if(navigator.share)navigator.share({text:t}).catch(()=>{});else copy(t)}
-else if(b.id==="inst"){if(DP){DP.prompt();DP=null;render()}}
+else if(b.id==="inst"||b.id==="inst2")installApp();
+else if(b.id==="dlgx")$("dlg").hidden=true;
 else if(b.id==="goT")go("textes");
 else if(d.c){S.cat=d.c;S.sel=-1;S.text="";render()}
 else if(d.i!==undefined){S.sel=+d.i;S.text=fill(T[S.sel][2]);render()}
@@ -140,7 +152,7 @@ else if(b.id==="rz"){S.plan={};store.set("bp_plan",S.plan);render()}});
 window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h)&&h!==S.tab){S.tab=h;render()}});
 {const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h))S.tab=h}
 render();
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+if("serviceWorker" in navigator){const had=navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!window.__rl){window.__rl=1;location.reload()}});window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
 </script>
 </body>
 </html>
