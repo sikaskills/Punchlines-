@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0a0a0a">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-title" content="Punchlines">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Banque à Punchlines</title>
 <style>
 :root{--bg:#0a0a0a;--surf:#161616;--ink:#f4efe1;--mute:#a59d86;--line:#2e2b22;--gold:#d4af37;--green:#2e9e5b;--hl:#2a2410;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);color-scheme:dark}
@@ -65,7 +65,7 @@ nav button[aria-selected="true"]{color:var(--gold);box-shadow:inset 0 2px 0 var(
 <main id="app"></main>
 <nav id="nav" role="tablist"></nav>
 <div class="toast" id="toast" role="status"></div>
-<div class="dlg" id="dlg" hidden><div><p id="dlgt"></p><button class="btn" id="dlgx">Compris</button></div></div>
+<div class="dlg" id="dlg" hidden><div><p id="dlgt"></p><p id="dlgd" style="white-space:pre-line;color:var(--mute);font-size:.85rem"></p><button class="btn" id="dlgx">Compris</button></div></div>
 <script>
 const FIELDS=[
 ["produit","Nom du produit","Guide PDF « 20 messages WhatsApp »"],
@@ -83,7 +83,9 @@ let DP=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault()
 const STANDALONE=!!((window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone);
 function installApp(){if(DP){DP.prompt();DP=null;return}
 const ios=/iphone|ipad|ipod/i.test(navigator.userAgent||"");
-$("dlgt").textContent=ios?"Sur iPhone, Apple ne permet pas de bouton qui installe directement. Ouvre cette page dans Safari, touche Partager (le carré avec une flèche), puis « Sur l’écran d’accueil », puis « Ajouter ».":"Touche les trois points en haut de Chrome, puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».";
+const d=$("dlgd");d.textContent="Contrôle des fichiers…";
+Promise.all([["manifest.webmanifest","manifeste"],["icon-192.png","icône 192"],["icon-512.png","icône 512"],["sw.js","service worker"]].map(([u,n])=>fetch(u,{cache:"no-store"}).then(r=>n+" : "+(r.ok?"OK":"MANQUANT")).catch(()=>n+" : MANQUANT"))).then(a=>{d.textContent=a.join("\n")}).catch(()=>{d.textContent=""});
+$("dlgt").textContent=ios?"Sur iPhone, Apple ne permet pas de bouton qui installe directement. Ouvre cette page dans Safari, touche Partager (le carré avec une flèche), puis « Sur l’écran d’accueil », puis « Ajouter ».":"Touche les trois points en haut de Chrome, puis « Installer l’application », « Installer et créer un raccourci » ou « Ajouter à l’écran d’accueil ».";
 $("dlg").hidden=false}
 const T=[
 ["Facebook","Question directe","[public], [probleme] ?\n\nJ’ai préparé [produit] pour ça.\nPrix : [prix].\nBonus offert : [bonus].\n\nÉcris-moi ici : [contact]"],

@@ -1,16 +1,13 @@
-BANQUE À PUNCHLINES — appli installable
+BANQUE À PUNCHLINES — 7 fichiers, tous au même niveau (pas de dossier)
 
-METTRE EN LIGNE (GitHub Pages)
-1. Crée un dépôt public sur github.com, par exemple "punchlines-app".
-2. Envoie le CONTENU de ce dossier (index.html, manifest.webmanifest, sw.js, dossier icons) à la racine du dépôt.
-3. Settings > Pages > Deploy from a branch > main > / (root) > Save.
-4. Ton lien : https://TON-PSEUDO.github.io/punchlines-app/
+index.html, manifest.webmanifest, sw.js,
+icon-192.png, icon-512.png, icon-maskable-512.png, apple-touch-icon.png
 
-INSTALLER
-Touche le bouton "Installer" en haut de l'appli. Sur iPhone : Safari > Partager > Sur l'écran d'accueil.
+SUR GITHUB (depuis un téléphone ou un ordinateur)
+1. Ouvre ton dépôt, touche Add file > Upload files.
+2. Sélectionne les 7 fichiers (sélection multiple), puis Commit changes.
+3. Ils remplacent les anciens. Le dossier "icons" de l'ancienne version n'est plus utilisé : tu peux le laisser.
+4. Attends 1 à 2 minutes, ouvre le lien dans Chrome, puis touche Installer.
 
-METTRE À JOUR (tes clients reçoivent la nouvelle version tout seuls)
-1. Sur GitHub, ouvre le fichier à changer (par exemple index.html).
-2. Touche le crayon, modifie, puis "Commit changes".
-3. Attends 1 à 2 minutes. À la prochaine ouverture avec du réseau, l'appli se met à jour.
-Plus besoin de changer le numéro de version dans sw.js.
+Si l'installation en un appui ne marche pas, touche Installer : la fenêtre affiche
+le contrôle des fichiers (OK ou MANQUANT). Envoie-moi une capture.
