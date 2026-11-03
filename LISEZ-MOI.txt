@@ -1,0 +1,10 @@
+BANQUE À PUNCHLINES — appli installable
+
+1. Dézippe le dossier sur un ordinateur.
+2. Va sur app.netlify.com/drop et glisse le dossier dézippé dans la page.
+3. Netlify te donne un lien en https. Ouvre-le sur ton téléphone.
+4. Android (Chrome) : « Installer l'application » (menu à trois points).
+   iPhone (Safari) : Partager, puis « Sur l'écran d'accueil ».
+
+Pour modifier l'appli plus tard : change "punchlines-v1" dans sw.js
+(par exemple "punchlines-v2") et remets le dossier en ligne.

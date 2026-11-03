@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Punchlines">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Banque à Punchlines</title>
+<style>
+:root{--bg:#0a0a0a;--surf:#161616;--ink:#f4efe1;--mute:#a59d86;--line:#2e2b22;--gold:#d4af37;--green:#2e9e5b;--hl:#2a2410;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px 16px calc(92px + env(safe-area-inset-bottom,0px))}
+h1{font:400 1.7rem/1.2 Georgia,"Times New Roman",serif;color:var(--gold);margin:10px 0 4px}
+p.sub{color:var(--mute);margin:0 0 16px;font-size:.93rem}
+label{display:block;font-weight:600;font-size:.9rem;margin:14px 0 4px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+textarea{min-height:190px;resize:vertical;line-height:1.5}
+.hero{display:flex;align-items:center;gap:12px;padding:4px 0 14px;margin-bottom:6px;border-bottom:1px solid var(--gold)}
+.hero svg{color:var(--gold);flex:none}
+.hero b{font:400 1.2rem/1.2 Georgia,"Times New Roman",serif;color:var(--gold);display:block}
+.hero small{color:var(--mute);font-size:.86rem}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.chip{flex:none;border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:20px;padding:8px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--gold);color:#0a0a0a;border-color:var(--gold);font-weight:700}
+.list{display:grid;gap:8px}
+.item{text-align:left;width:100%;border:1px solid var(--line);border-left:3px solid var(--green);background:var(--surf);color:var(--ink);border-radius:8px;padding:12px;font:inherit;cursor:pointer}
+.item[aria-current="true"]{border-color:var(--gold);border-left-color:var(--gold)}
+.item small{display:block;color:var(--mute);margin-top:2px}
+.row{display:flex;gap:8px;margin-top:10px}
+.btn{flex:1;border:1px solid var(--gold);border-radius:8px;padding:14px;font:inherit;font-weight:700;cursor:pointer;background:var(--gold);color:#0a0a0a}
+.btn.alt{background:transparent;color:var(--gold)}
+.btn.wa{background:var(--green);border-color:var(--green);color:#fff}
+.btn:active{opacity:.8}
+.warn{background:var(--hl);border-left:3px solid var(--gold);border-radius:6px;padding:8px 12px;font-size:.9rem;margin:10px 0}
+.card{background:var(--surf);border:1px solid var(--line);border-top:2px solid var(--gold);border-radius:8px;padding:12px;margin-bottom:10px}
+.card pre{white-space:pre-wrap;font:inherit;margin:6px 0 10px}
+.day{display:flex;gap:12px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:8px}
+.day input{width:24px;height:24px;margin-top:2px;flex:none;accent-color:var(--green)}
+.day.done{opacity:.6}
+.day.done b{text-decoration:line-through}
+.day button{margin-top:6px;border:0;background:none;color:var(--gold);text-decoration:underline;font:inherit;padding:4px 0;cursor:pointer}
+.inst{background:var(--surf);border:1px solid var(--gold);border-radius:8px;padding:12px;margin:0 0 6px}
+.inst p{margin:6px 0;font-size:.92rem}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#0f0f0f;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-size:.78rem;line-height:1.3;padding:8px 2px;border-radius:8px;cursor:pointer}
+nav button svg{display:block;margin:0 auto 2px}
+nav button[aria-selected="true"]{color:var(--gold);box-shadow:inset 0 2px 0 var(--gold)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--green);color:#fff;padding:10px 16px;border-radius:20px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.empty{color:var(--mute);padding:20px 4px}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav id="nav" role="tablist"></nav>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const FIELDS=[
+["produit","Nom du produit","Guide PDF « 20 messages WhatsApp »"],
+["prix","Prix en FCFA","Ex. 2 500 FCFA"],
+["public","Pour qui","Ex. petits commerçants"],
+["probleme","Le problème que le produit règle","Ex. des clients qui lisent mais ne répondent pas"],
+["bonus","Bonus","Ex. 5 modèles de statuts"],
+["temoignage","Témoignage (une phrase)","Ex. « J’ai repris mes clients en une semaine. »"],
+["places","Places restantes","Ex. 12"],
+["contact","Lien ou numéro WhatsApp","Ex. wa.me/229XXXXXXXX"]
+];
+const CATS=["Facebook","Instagram","Statut WhatsApp","TikTok","Objection prix"];
+const CCOL={"Facebook":"#2b6cff","Statut WhatsApp":"#14a35a","TikTok":"#ff3d7f","Objection prix":"#ff8a00"};
+let DP=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DP=e;if(S.tab==="fiche")render()});
+const T=[
+["Facebook","Question directe","[public], [probleme] ?\n\nJ’ai préparé [produit] pour ça.\nPrix : [prix].\nBonus offert : [bonus].\n\nÉcris-moi ici : [contact]"],
+["Facebook","Avant / après","Avant : [probleme].\nAprès : une méthode claire avec [produit].\n\nPour [public]. Prix : [prix].\nCommande : [contact]"],
+["Facebook","Témoignage","« [temoignage] »\n\nC’est ce que disent ceux qui utilisent [produit].\nPrix : [prix]. Bonus : [bonus].\n\nPour l’avoir : [contact]"],
+["Facebook","Places limitées","Il reste [places] places pour [produit].\n\nPour [public] qui en ont assez de [probleme].\nPrix : [prix] avec [bonus] en plus.\n\nRéserve ici : [contact]"],
+["Statut WhatsApp","Statut court","[probleme] ?\n[produit], [prix].\nÉcris-moi : [contact]"],
+["Statut WhatsApp","Témoignage en statut","« [temoignage] »\n\n[produit] — [prix]\nBonus : [bonus]\n[contact]"],
+["Statut WhatsApp","Rappel du soir","Dernier rappel de la journée : [produit].\nIl reste [places] places.\nRéponds « OUI » pour recevoir les détails."],
+["TikTok","Accroche vidéo","Si tu es [public] et que tu vis [probleme], regarde jusqu’à la fin.\n\nJe te montre comment [produit] règle ça.\nLien en bio : [contact]"],
+["TikTok","Voix off courte","Tu fais [probleme] ? Voilà ce que je fais à la place.\nC’est dans [produit], [prix].\nBonus : [bonus]. Contact : [contact]"],
+["TikTok","Réponse à un commentaire","Tu m’as demandé comment régler [probleme].\nJe l’ai mis dans [produit].\nTout est expliqué, pour [prix]. [contact]"],
+["Objection prix","Comparer au quotidien","[prix], c’est le prix d’un repas.\nAvec [produit], tu règles [probleme].\nBonus : [bonus]. Commande : [contact]"],
+["Objection prix","Coût de ne rien faire","Chaque jour avec [probleme], tu perds des occasions.\n[produit] coûte [prix] une seule fois.\nPour [public]. [contact]"],
+["Objection prix","Réponse en message privé","Je comprends que [prix] fasse réfléchir.\nVoici ce que tu reçois : [produit] et [bonus].\n« [temoignage] »\nSi ça te convient : [contact]"],
+["Instagram","Légende simple","[probleme] ?\n\n[produit] est fait pour [public].\nPrix : [prix]. Bonus : [bonus].\n\nÉcris-moi en message privé : [contact]"],
+["Instagram","Légende témoignage","« [temoignage] »\n\nVoilà ce que [produit] apporte à [public].\nBonus : [bonus]. Prix : [prix].\n\nCommande : [contact]"],
+["Instagram","Texte de story","[produit]\n[prix] · Bonus : [bonus]\nIl reste [places] places.\nÉcris-moi : [contact]"]
+];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let FL=store.get("bp_fiches",null);if(!FL||!FL.length)FL=[store.get("bp_fiche",{})];
+let S={tab:"fiche",cat:CATS[0],sel:-1,text:"",fiches:FL,cur:0,fiche:FL[0],favs:store.get("bp_favs",[]),plan:store.get("bp_plan",{})};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function fill(t){return t.replace(/\[(\w+)\]/g,(m,k)=>(S.fiche[k]&&S.fiche[k].trim())?S.fiche[k].trim():m)}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1600)}
+async function copy(txt){try{await navigator.clipboard.writeText(txt)}catch(e){const a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(_){}a.remove()}toast("Texte copié")}
+const TABS=[["fiche", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M7 3h7l4 4v14H7z'/><path d='M14 3v4h4M10 12h5M10 16h5'/></svg>Ma fiche"], ["textes", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l4-1 11-11-3-3L5 16z'/><path d='M14 6l3 3'/></svg>Textes"], ["favoris", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z'/></svg>Favoris"], ["plan", "<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='5' width='16' height='15' rx='2'/><path d='M4 10h16M8 3v4M16 3v4'/></svg>7 jours"]];
+function go(t){S.tab=t;if(location.hash!=="#"+t)location.hash=t;render();window.scrollTo(0,0)}
+function nav(){$("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" aria-selected="${S.tab===k}" data-t="${k}">${l}</button>`).join("");$("nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.t)}}
+function PSEL(add){return `<div class="chips">${S.fiches.map((f,i)=>`<button class="chip" aria-pressed="${i===S.cur}" data-p="${i}">${esc((f.produit||"").slice(0,24)||"Produit "+(i+1))}</button>`).join("")}${add?`<button class="chip" data-np="1">+ Nouveau produit</button>`:""}</div>`}
+function vFiche(){return `<h1>Ma fiche produit</h1><p class="sub">Remplis-la une seule fois. Elle complète tous les textes automatiquement.</p><div class="inst"><b>Installer sur mon téléphone</b>${DP?`<div class="row"><button class="btn" id="inst">Installer l’appli</button></div>`:""}<p><b>iPhone (Safari)</b> : touche Partager, puis « Sur l’écran d’accueil ».</p><p><b>Android (Chrome)</b> : touche les trois points, puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».</p></div>`+PSEL(true)+FIELDS.map(([k,l,p])=>`<label for="f_${k}">${l}</label><input id="f_${k}" data-k="${k}" placeholder="${esc(p)}" value="${esc(S.fiche[k]||"")}" autocomplete="off">`).join("")+`<div class="row"><button class="btn" id="goT">Choisir un texte</button></div>`+(S.fiches.length>1?`<div class="row"><button class="btn alt" data-dp="1">Supprimer ce produit</button></div>`:"")}
+function vTextes(){
+const L=T.map((t,i)=>[t,i]).filter(([t])=>t[0]===S.cat);
+const miss=[...new Set((S.text.match(/\[\w+\]/g)||[]))];
+return `<h1>Textes</h1><p class="sub">Choisis un modèle, modifie-le, copie-le.</p>${S.fiches.length>1?PSEL(false):""}
+<div class="chips">${CATS.map(c=>`<button class="chip" aria-pressed="${S.cat===c}" data-c="${c}">${c}</button>`).join("")}</div>
+<div class="list" style="--cc:${CCOL[S.cat]}">${L.map(([t,i])=>`<button class="item" data-i="${i}" aria-current="${S.sel===i}"><b>${t[1]}</b><small>${esc(fill(t[2]).split("\n")[0])}</small></button>`).join("")}</div>
+${S.sel>=0?`<label for="txt">Ton texte</label><textarea id="txt">${esc(S.text)}</textarea>
+${miss.length?`<div class="warn">À compléter dans ta fiche : ${miss.join(", ")}</div>`:""}
+<div class="row"><button class="btn" id="cp">Copier</button><button class="btn wa" id="wa">WhatsApp</button></div><div class="row"><button class="btn alt" id="sh">Partager</button><button class="btn alt" id="fv">Garder en favori</button></div><p class="sub" style="margin-top:12px">Instagram : touche Copier, puis colle le texte dans ta légende ou ta story.</p>`:""}`}
+function vFavs(){return `<h1>Favoris</h1><p class="sub">Tes textes gardés, prêts à copier.</p>`+(S.favs.length?S.favs.map((f,i)=>`<div class="card"><b>${esc(f.cat)}</b><pre>${esc(f.text)}</pre><div class="row"><button class="btn" data-cp="${i}">Copier</button><button class="btn alt" data-sf="${i}">Partager</button><button class="btn alt" data-del="${i}">Supprimer</button></div></div>`).join(""):`<div class="empty">Aucun favori. Dans Textes, touche « Garder en favori ».</div>`)}
+const PLAN=[["Annonce Facebook","Facebook"],["Statut WhatsApp","Statut WhatsApp"],["Vidéo TikTok","TikTok"],["Témoignage","Facebook"],["Réponse à l’objection du prix","Objection prix"],["Relance de tes contacts WhatsApp","Statut WhatsApp"],["Compter les réponses et garder la meilleure accroche",null]];
+function vPlan(){const n=Object.values(S.plan).filter(Boolean).length;return `<h1>Plan sur 7 jours</h1><p class="sub">${n} jour${n>1?"s":""} sur 7 fait${n>1?"s":""}.</p>`+PLAN.map(([l,c],i)=>`<div class="day ${S.plan[i]?"done":""}"><input type="checkbox" id="d${i}" data-d="${i}" ${S.plan[i]?"checked":""}><div><label for="d${i}" style="margin:0"><b>Jour ${i+1} : ${l}</b></label>${c?`<button data-w="${c}">Écrire ce texte</button>`:""}</div></div>`).join("")+`<div class="row"><button class="btn alt" id="rz">Remettre le plan à zéro</button></div>`}
+function render(){nav();$("app").innerHTML=`<header class="hero"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-linecap="round" stroke-width="2.6"/></svg><div><b>Banque à Punchlines</b><small>Tes pubs prêtes en quelques secondes</small></div></header>`+{fiche:vFiche,textes:vTextes,favoris:vFavs,plan:vPlan}[S.tab]()}
+document.addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.k;if(k){S.fiche[k]=e.target.value;store.set("bp_fiches",S.fiches)}if(e.target.id==="txt")S.text=e.target.value});
+document.addEventListener("change",e=>{if(e.target.dataset&&e.target.dataset.d!==undefined){S.plan[e.target.dataset.d]=e.target.checked;store.set("bp_plan",S.plan);render()}});
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+if(d.p!==undefined){S.cur=+d.p;S.fiche=S.fiches[S.cur];if(S.sel>=0)S.text=fill(T[S.sel][2]);render()}
+else if(d.np){S.fiches.push({});S.cur=S.fiches.length-1;S.fiche=S.fiches[S.cur];store.set("bp_fiches",S.fiches);render()}
+else if(d.dp){if(confirm("Supprimer ce produit ?")){S.fiches.splice(S.cur,1);S.cur=0;S.fiche=S.fiches[0];store.set("bp_fiches",S.fiches);render()}}
+else if(b.id==="wa")window.open("https://wa.me/?text="+encodeURIComponent(S.text),"_blank");
+else if(b.id==="sh"){if(navigator.share)navigator.share({text:S.text}).catch(()=>{});else copy(S.text)}
+else if(d.sf!==undefined){const t=S.favs[+d.sf].text;if(navigator.share)navigator.share({text:t}).catch(()=>{});else copy(t)}
+else if(b.id==="inst"){if(DP){DP.prompt();DP=null;render()}}
+else if(b.id==="goT")go("textes");
+else if(d.c){S.cat=d.c;S.sel=-1;S.text="";render()}
+else if(d.i!==undefined){S.sel=+d.i;S.text=fill(T[S.sel][2]);render()}
+else if(b.id==="cp")copy(S.text);
+else if(b.id==="fv"){S.favs.unshift({cat:T[S.sel][0],text:S.text});store.set("bp_favs",S.favs);toast("Gardé dans les favoris")}
+else if(d.cp!==undefined)copy(S.favs[+d.cp].text);
+else if(d.del!==undefined){S.favs.splice(+d.del,1);store.set("bp_favs",S.favs);render()}
+else if(d.w){S.cat=d.w;S.sel=-1;S.text="";go("textes")}
+else if(b.id==="rz"){S.plan={};store.set("bp_plan",S.plan);render()}});
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h)&&h!==S.tab){S.tab=h;render()}});
+{const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h))S.tab=h}
+render();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
